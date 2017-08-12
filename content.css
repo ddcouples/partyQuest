@@ -21,6 +21,10 @@ html{
 	width: 100%;
 	transition:top 1s ease;
 }
+.App-header-title{
+	font-size:1rem;
+	color: #0094ff;
+}
 .App-header>h1{
 	font-size:4rem;
 	text-shadow:#fff 1px 1px 3px;

@@ -221,10 +221,15 @@
 		    return (
 		      <div className="App">
 		        <div className="App-header" style={{top:this.state.start?'1rem':'30%'}}>
-		          <h1>{resources.title}</h1>
+		          <h1>
+                 {resources.title}
+                 <p className="App-header-title pulse">制作: 代小代,罗序鸣</p>
+              </h1>
               <span className="button-wrap" style={{display:this.state.start?'none':''}}>
-                <a href="#" onClick={this.startOrNot.bind(this)} className="button button-pill button-raised button-primary">Go</a>
+
+                <a href="#" onClick={this.startOrNot.bind(this)} className="button button-pill button-raised button-primary">开始测试</a>
               </span>
+              
 		        </div>
 		        <div className="App-intro" style={{display:this.state.start?'':'none'}}>
 		          <div className="content">
