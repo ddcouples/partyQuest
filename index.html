@@ -185,11 +185,13 @@
          }
 
          let scale=resources.scale,_scoreIndex=this.state.scoreIndex;
-         for(var i=0;i<scale.length;i++){
+         for(var i=0;i<scale.length-1;i++){
             if(scale[i].score<=score&&score<scale[i+1].score){
               _scoreIndex=i;
             }
+
          }
+         if(scale[scale.length-1].score==score) _scoreIndex=scale.length-1;
          document.title="我的党题理论测试得了"+score+"分！不服来战！"
          this.setState({
            showScore:true,
