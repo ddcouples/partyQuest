@@ -52,6 +52,9 @@ html{
 .content-ans{
 	padding-left: 1rem;
 }
+.content-ans>li{
+  margin-bottom: 1rem;
+}
 .content-ans .ans-index-com{
 	width: 2rem;
     margin-right: 2rem;
