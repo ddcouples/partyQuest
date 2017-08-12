@@ -1,0 +1,136 @@
+html{
+	font-size:62.5%;
+	height: 100%;
+}
+#root{
+	height: 100%;
+}
+.App{
+	text-align: center;
+	height: 100%;
+	background: url(./bg1.jpg) no-repeat;
+	background-size:200% 100%;
+	background-origin:content-box;
+	background-position: center;
+	position: relative;
+}
+.App-header{
+	position: absolute;
+	top:30%;
+	text-align: center;
+	width: 100%;
+	transition:top 1s ease;
+}
+.App-header>h1{
+	font-size:4rem;
+	text-shadow:#fff 1px 1px 3px;
+	margin-bottom: 2rem;
+	color:#f00;
+}
+.App-intro{
+	padding: 8rem 0;
+}
+.App-footer{
+	position: absolute;
+	bottom:0%;
+	text-align: center;
+	width: 100%;
+}
+.content{
+	text-shadow: red 0 1px 0;
+      font: bold 2.5rem/100% "微软雅黑", "Lucida Grande", "Lucida Sans", Helvetica, Arial, Sans;;
+      color: #ff0;
+      text-align: left;
+      padding: 0 1rem;
+      line-height: 3rem;
+      text-transform: uppercase; 
+}
+.content-ans{
+	padding-left: 1rem;
+}
+.content-ans .ans-index-com{
+	width: 2rem;
+    margin-right: 2rem;
+    height: 3rem;
+    display: inline-block;
+}
+.ans-index-select{
+	position: relative;
+}
+.ans-index-select::before{
+	content: '';
+    position: absolute;
+    width: 2rem;
+    height: 0.5rem;
+    background: red;
+    top: 26px;
+    left: -9px;
+    box-shadow: 0 1px 1px #ff0;
+    border-radius: 3px;
+    transform: rotateZ(45deg);
+}
+.ans-index-select:after{
+	    content: '';
+    position: absolute;
+    width: 3rem;
+    height: 0.5rem;
+    background: red;
+    top: 19px;
+    left: 5px;
+    transform: rotateZ(-45deg);
+    box-shadow: 0 1px 1px #ff0;
+}
+.App-score{
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	background: #0094ff;
+	width: 80%;
+	padding: 2rem 0;
+	transform: translate(-50%, -50%);
+	box-shadow: 0 5px 3px #ddd,-5px 0 3px #ddd,5px 0 3px #ddd;
+}
+.App-score-title{
+	font-size: 2rem;
+	color: #ddd;
+}
+@keyframes pulse {
+  from {
+    transform: scale3d(1, 1, 1);
+    color: #f00;	
+  }
+
+  50% {
+    transform: scale3d(1.05, 1.05, 1.05);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+    color: #0f0;	
+  }
+}
+.App-score-designation{
+   font-size: 3rem;
+	color: #f00;	
+}
+.pulse {
+  animation:pulse 1s infinite linear  
+}
+.App-score-describ{
+   font-size: 2rem;
+	color: #ff0;	
+}
+.App-score-text{
+	font-size: 2.5rem;
+	color: red;
+}
+.App-score-text>span{
+	color: #FFEB3B;	
+	margin-left: 1rem;
+}
+.App-score-res{
+	position: absolute;
+    top: 0;
+	left: 50%;
+	transform: translate(-50%, -50%);	
+}

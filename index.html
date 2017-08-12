@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    
+    <link rel="manifest" href="./manifest.json">
+    <link rel="Stylesheet" type="text/css" href="./style.css" />
+    <link rel="Stylesheet" type="text/css" href="./content.css" />
+    <title>理论测试</title>
+    <script src="./dlLoading.min.js"></script>
+    <script src="./react.js"></script>
+    <script src="./react-dom.js"></script>
+    <script src="./babel.min.js"></script>
+    <script src="./resource.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" defer>
+    	let option={
+	     w: 110, 
+	     h: 110,
+	     fillStyle: '#13B6FC', 
+	     strokeStyle:'#13B6FC',
+	     tc:'#fff'
+  		};
+  		dlLoading.start(option);
+    </script>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root"></div>
+    <script type="text/babel">
+     function transIndexToEn(index){
+        switch(index){
+          case 0:
+            return 'A'
+          break;
+          case 1:
+            return 'B'
+          break;          
+          case 2:
+            return 'C'
+          break;          
+          case 3:
+            return 'D'
+          break; 
+          case 'A':
+            return 0;
+          break;
+          case 'B':
+            return 1;
+          break;          
+          case 'C':
+            return 2;
+          break;          
+          case 'D':
+            return 3;
+          break;                    
+        }
+      } 
+      function removeIndex(i,text){
+        if(text){
+          let _i=text.indexOf(transIndexToEn(i));
+          if(_i!=-1){
+            let _textArr=text.split('');
+               _textArr.splice(_i,1);
+             text=_textArr.join('');
+          }
+        }
+        return text;
+      }
+      function addIndex(i,text){
+        if(text){
+          let _textArr=text.split('');
+          _textArr.push(transIndexToEn(i));
+          text=_textArr.sort().join('');
+        }else{
+          text=transIndexToEn(i);
+        }
+        return text;        
+      }
+	  class App extends React.Component {
+      constructor(props) {
+  　　　　super(props);
+  　　　　this.state = {
+            start:false,
+            showScore:false,
+            curIndex:0,
+            score:0,
+            scoreIndex:0,
+            answers:resources.questions.map(q=>{
+              return '';
+            })
+          };
+          this.operaScore.bind(this);
+  　　}
+     reStart(){
+       this.setState({
+            showScore:false,
+            curIndex:0,
+            score:0,
+            scoreIndex:0,
+            answers:resources.questions.map(q=>{
+              return '';
+            })         
+       })
+     }
+      startOrNot(){
+         this.setState({
+           start:true
+         })
+      }
+      handleTouchStart(i){
+        let questions=resources.questions[this.state.curIndex];
+        let _ans=this.state.answers;
+        if(questions.ans.length==1){
+          if(questions.mayAnsObj[i].isSel){
+            _ans[this.state.curIndex]='';
+          }else{
+            _ans[this.state.curIndex]=transIndexToEn(i);
+          }
+          
+        }else{
+            let _ans=this.state.answers;
+            _ans[this.state.curIndex]=_ans[this.state.curIndex]?_ans[this.state.curIndex]:'';
+            if(questions.mayAnsObj[i].isSel){
+              _ans[this.state.curIndex]=removeIndex(i,_ans[this.state.curIndex]);
+            }else{
+              _ans[this.state.curIndex]=addIndex(i,_ans[this.state.curIndex]);
+            }            
+        }
+       this.setState({
+            answers:_ans
+          })        
+       }
+
+       handleLast(){
+         let cur=this.state.curIndex;
+         if(this.state.curIndex==0){
+           alert('当前是第一题！');
+         }else{
+           cur-=1;
+         }
+         this.setState({
+            curIndex:cur
+          })          
+       }
+       handleNext(){
+         let cur=this.state.curIndex;
+         if(cur==resources.questions.length-1){
+            //交卷
+            console.log(this.state.answers);
+            this.operaScore();
+         }else{
+           cur+=1;
+         }
+        this.setState({
+            curIndex:cur
+          })         
+       }
+       
+       operaScore(){
+         let score=0,_ans=this.state.answers,corAns=resources.questions,l=_ans.length,simS=resources.totalScore/l;
+         for(var i=0;i<l;i++){
+            if(new String(corAns[i].ans).length==1&&corAns[i].ans==_ans[i]){
+              score+=simS;
+            }
+            if(new String(corAns[i].ans).length>1&&_ans[i]){
+              if(corAns[i].ans==_ans[i]){
+                score+=simS;
+              }else if(new String(corAns[i].ans).length > new String(_ans[i]).length){
+                 let halfScore=true;
+                 _ans[i].split('').forEach(a=>{
+                   if(corAns[i].ans.indexOf(a)==-1){
+                     halfScore=false;
+                   }
+                 })
+                 if(halfScore){
+                   score+=simS/2;
+                 }
+              }
+            }
+         }
+
+         let scale=resources.scale,_scoreIndex=this.state.scoreIndex;
+         for(var i=0;i<scale.length;i++){
+            if(scale[i].score<=score&&score<scale[i+1].score){
+              _scoreIndex=i;
+            }
+         }
+         this.setState({
+           showScore:true,
+           score:score,
+           scoreIndex:_scoreIndex
+         })         
+       }
+      
+		  render() {
+        let questions=resources.questions[this.state.curIndex];
+        let _mayAns=questions.qMayAns.split(/[A-Z]\、/),isSel;
+        _mayAns.splice(0,1);
+        questions.mayAnsObj=_mayAns.map((a,index)=>{
+          if(this.state.answers[this.state.curIndex]){
+              isSel=this.state.answers[this.state.curIndex].indexOf(transIndexToEn(index))!=-1;
+           }else{
+             isSel=false;
+           }        
+          return{
+            index:index,
+            text:a,
+            isSel:isSel
+          }
+        });
+        let len=questions.qTitle.length;
+        let lastText = this.state.curIndex ==resources.questions.length-1?'交卷':'下一题';
+		    return (
+		      <div className="App">
+		        <div className="App-header" style={{top:this.state.start?'1rem':'30%'}}>
+		          <h1>{resources.title}</h1>
+              <span className="button-wrap" style={{display:this.state.start?'none':''}}>
+                <a href="#" onClick={this.startOrNot.bind(this)} className="button button-pill button-raised button-primary">Go</a>
+              </span>
+		        </div>
+		        <div className="App-intro" style={{display:this.state.start?'':'none'}}>
+		          <div className="content">
+                  <p><span>{this.state.curIndex+1}</span>、
+                   <span style={{fontSize:len>60?'1.5rem':'2.5rem',lineHeight:len>60?'1.5rem':'2.5rem',display:len>60?'inline-block':''}}>
+                    {questions.qTitle}
+                   </span>
+                  </p> 
+                  <ul className="content-ans">
+                    {
+                      questions.mayAnsObj.map( (a,i)=> {
+                        return (<li className={a.isSel?"ans-index-select":''} key={a.index.toString()} onTouchStart={this.handleTouchStart.bind(this,i)}><span className="ans-index-com">{transIndexToEn(a.index)}</span>{a.text}</li>)
+                      })
+                    }
+                  </ul>
+              </div>
+		        </div>
+            <div className="App-footer" style={{display:this.state.start?'':'none'}}>
+              <button className="button button-rounded button-primary button-large" onClick={this.handleLast.bind(this)}>上一题</button>
+              <button className="button button-rounded button-action button-large" onClick={this.handleNext.bind(this)}>{lastText}</button>
+            </div>
+            <div className="App-score" style={{display:this.state.showScore?'':'none'}}>
+                <div className="App-score-res"><button className="button button-glow button-rounded button-caution" onClick={this.reStart.bind(this)}>再来</button></div>
+                <p className="App-score-text">{this.state.score}<span>分</span></p>
+               <div className="App-score-title">恭喜您，获得了</div>
+                <p className="pulse App-score-designation">{resources.scale[this.state.scoreIndex].designation}</p>
+                <p className="App-score-title">的称号！</p>
+                <p className="App-score-describ">{resources.scale[this.state.scoreIndex].describe}</p>
+            </div>
+		      </div>
+		    );
+		  }
+	  }
+      ReactDOM.render(
+        <App/>,
+        document.getElementById('root')
+      );
+
+    </script>
+  </body>
+</html>
